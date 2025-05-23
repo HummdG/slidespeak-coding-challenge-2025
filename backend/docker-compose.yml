@@ -1,0 +1,5 @@
+version: '3'
+
+services:
+  unoserver:
+    image: libreofficedocker/libreoffice-unoserver:3.19-9c28c22

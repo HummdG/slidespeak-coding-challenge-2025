@@ -1,0 +1,18 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.rpv-core__page-layer--single {
+  overflow: hidden !important;
+  border: solid 1px #EAECF0;
+  box-shadow: 0 0 4px 0 rgba(0, 0, 0, 0.08) !important;
+  margin: 0 !important;
+}
+
+.rpv-core__page-layer::after {
+  box-shadow: none !important;
+}
+
+.rpv-core__inner-page {
+  background-color: #FAF9FB !important;
+}
