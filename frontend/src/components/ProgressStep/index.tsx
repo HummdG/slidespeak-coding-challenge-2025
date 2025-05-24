@@ -2,6 +2,7 @@
 "use client";
 
 import React, { useEffect } from "react";
+import { LoadingIndicatorIcon } from "@/icons/LoadingIndicatorIcon";
 
 export function ProgressStep({
   jobId,
@@ -59,28 +60,20 @@ export function ProgressStep({
           <div className="bg-white border border-gray-200 rounded-lg p-6 text-left shadow-sm">
             <div className="flex items-center gap-3">
               {/* Circular progress ring */}
-              <div className="relative w-6 h-6">
-                <svg className="w-6 h-6 -rotate-90" viewBox="0 0 24 24">
-                  <circle
-                    cx="12"
-                    cy="12"
-                    r="10"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                    fill="none"
-                    className="text-gray-200"
+              <div className="bg-white select-none text-base flex items-center justify-center">
+                <svg
+                  className="w-5 h-5 animate-spin"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                >
+                  <path
+                    fill="gray"
+                    d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"
+                    opacity="1"
                   />
-                  <circle
-                    cx="12"
-                    cy="12"
-                    r="10"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                    fill="none"
-                    strokeDasharray="62.83"
-                    strokeDashoffset="20"
-                    className="text-blue-600 animate-spin"
-                    strokeLinecap="round"
+                  <path
+                    fill="blue-700"
+                    d="M12 2C17.52 2 22 6.48 22 12h-2C20 7.58 16.42 4 12 4V2z"
                   />
                 </svg>
               </div>
@@ -91,7 +84,14 @@ export function ProgressStep({
           </div>
         </div>
 
-        {/* Action buttons - Cancel disabled, Convert replaced with loading */}
+        {/* Loading indicator above buttons */}
+        <div className="flex justify-center mb-6">
+          <div className="animate-spin">
+            <LoadingIndicatorIcon />
+          </div>
+        </div>
+
+        {/* Action buttons - Cancel disabled, Convert with simple spinner */}
         <div className="flex gap-4">
           <button
             disabled
@@ -100,22 +100,9 @@ export function ProgressStep({
             Cancel
           </button>
           <div className="flex-1 px-6 py-3 bg-blue-300 rounded-lg font-medium select-none text-base flex items-center justify-center">
-            <svg
-              className="w-5 h-5 mr-2 animate-spin"
-              viewBox="0 0 24 24"
-              fill="none"
-            >
-              <path
-                fill="white"
-                d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"
-                opacity="0.3"
-              />
-              <path
-                fill="white"
-                d="M12 2C17.52 2 22 6.48 22 12h-2C20 7.58 16.42 4 12 4V2z"
-              />
-            </svg>
-            <span className="text-white text-base">Converting...</span>
+            <div className="animate-spin">
+              <LoadingIndicatorIcon />
+            </div>
           </div>
         </div>
       </div>
