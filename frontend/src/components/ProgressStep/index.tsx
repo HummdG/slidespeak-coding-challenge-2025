@@ -2,6 +2,7 @@
 "use client";
 
 import React, { useEffect } from "react";
+import { LoadingIndicatorIcon } from "@/icons/LoadingIndicatorIcon";
 
 export function ProgressStep({
   jobId,
@@ -12,8 +13,8 @@ export function ProgressStep({
   onDone(url: string): void;
   onError(msg: string): void;
 }) {
-  const interval = Number(process.env.NEXT_PUBLIC_POLL_INTERVAL);
-  const timeout = Number(process.env.NEXT_PUBLIC_POLL_TIMEOUT);
+  const interval = Number(process.env.NEXT_PUBLIC_POLL_INTERVAL) || 2000;
+  const timeout = Number(process.env.NEXT_PUBLIC_POLL_TIMEOUT) || 300000;
 
   useEffect(() => {
     const start = Date.now();
@@ -44,9 +45,34 @@ export function ProgressStep({
   }, [jobId]);
 
   return (
-    <div className="p-6 rounded-2xl bg-white shadow-md text-center">
-      <p>Converting your file…</p>
-      <div className="mt-4 animate-spin border-4 border-blue-500 border-t-transparent rounded-full w-8 h-8 mx-auto" />
+    <div className="max-w-md mx-auto">
+      <div className="bg-white border border-gray-200 rounded-2xl p-6 shadow-sm">
+        <div className="mb-6">
+          <h3 className="text-lg font-semibold text-gray-900 mb-1">
+            Digital Marketing requirements.pptx
+          </h3>
+          <p className="text-sm text-gray-500">5.5 MB</p>
+        </div>
+
+        <div className="text-center mb-8">
+          <div className="w-8 h-8 mx-auto mb-4">
+            <div className="animate-spin">
+              <LoadingIndicatorIcon />
+            </div>
+          </div>
+          <p className="text-gray-700 font-medium">Converting your file...</p>
+        </div>
+
+        <div className="flex gap-3">
+          <button
+            disabled
+            className="flex-1 px-4 py-2 border border-gray-200 text-gray-400 rounded-lg cursor-not-allowed font-medium"
+          >
+            Cancel
+          </button>
+          <div className="flex-1"></div>
+        </div>
+      </div>
     </div>
   );
 }
