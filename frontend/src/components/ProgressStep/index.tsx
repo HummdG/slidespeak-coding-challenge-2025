@@ -1,3 +1,6 @@
+// src/components/ProgressStep/index.tsx
+"use client";
+
 import React, { useEffect } from "react";
 
 export function ProgressStep({
