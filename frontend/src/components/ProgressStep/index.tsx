@@ -10,7 +10,7 @@ export function ProgressStep({
   onDone,
   onError,
 }: {
-  jobId: string;
+  jobId?: string;
   file: File;
   onDone(url: string): void;
   onError(msg: string): void;
@@ -19,6 +19,8 @@ export function ProgressStep({
   const timeout = Number(process.env.NEXT_PUBLIC_POLL_TIMEOUT) || 300000;
 
   useEffect(() => {
+    if (!jobId) return; // Don't start polling until we have a jobId
+
     const start = Date.now();
     const tick = setInterval(async () => {
       const elapsed = Date.now() - start;
@@ -44,7 +46,7 @@ export function ProgressStep({
       }
     }, interval);
     return () => clearInterval(tick);
-  }, [jobId]);
+  }, [jobId, interval, timeout, onDone, onError]);
 
   return (
     <div className="w-full max-w-2xl mx-auto">
@@ -91,7 +93,7 @@ export function ProgressStep({
                 </svg>
               </div>
               <span className="text-base text-gray-700 select-none">
-                Converting your file
+                {jobId ? "Converting your file" : "Uploading your file"}
               </span>
             </div>
           </div>

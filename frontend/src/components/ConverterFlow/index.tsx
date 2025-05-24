@@ -26,7 +26,6 @@ export function ConverterFlow() {
       )}
 
       {(state.status === "uploading" || state.status === "processing") &&
-        state.jobId &&
         state.file && (
           <ProgressStep
             jobId={state.jobId}
