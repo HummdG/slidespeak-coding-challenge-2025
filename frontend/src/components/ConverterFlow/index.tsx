@@ -12,12 +12,8 @@ export function ConverterFlow() {
   const [state, actions] = useConvert();
 
   return (
-    <div className="w-full">
-      {state.error && (
-        <div className="mb-6">
-          <ErrorBanner message={state.error} />
-        </div>
-      )}
+    <div className="w-full space-y-6">
+      {state.error && <ErrorBanner message={state.error} />}
 
       {state.status === "idle" && <ChooseFileStep onSelect={actions.select} />}
 
