@@ -60,7 +60,9 @@ export function ProgressStep({
               <LoadingIndicatorIcon />
             </div>
           </div>
-          <p className="text-gray-700 font-medium">Converting your file...</p>
+          <p className="text-gray-700 font-medium select-none">
+            Converting your file...
+          </p>
         </div>
 
         <div className="flex gap-3">

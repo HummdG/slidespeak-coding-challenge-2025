@@ -33,7 +33,7 @@ export function ConfirmStep({
             <div>
               <label
                 htmlFor="convert-pdf"
-                className="font-medium text-gray-900 cursor-pointer"
+                className="font-medium text-gray-900 cursor-pointer select-none"
               >
                 Convert to PDF
               </label>
@@ -47,13 +47,13 @@ export function ConfirmStep({
         <div className="flex gap-3">
           <button
             onClick={onCancel}
-            className="flex-1 px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 font-medium"
+            className="flex-1 px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 font-medium select-none"
           >
             Cancel
           </button>
           <button
             onClick={onConfirm}
-            className="flex-1 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 font-medium"
+            className="flex-1 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 font-medium select-none"
           >
             Convert
           </button>

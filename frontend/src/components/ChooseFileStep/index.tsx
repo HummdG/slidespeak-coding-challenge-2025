@@ -25,7 +25,7 @@ export function ChooseFileStep({ onSelect }: { onSelect(file: File): void }) {
           <UploadIcon />
         </div>
 
-        <h3 className="text-lg font-medium text-gray-900 mb-2">
+        <h3 className="text-lg font-medium text-gray-900 mb-2 select-none">
           Drag and drop a PowerPoint file to convert to PDF.
         </h3>
 
@@ -39,7 +39,7 @@ export function ChooseFileStep({ onSelect }: { onSelect(file: File): void }) {
 
         <label
           htmlFor="pptx-input"
-          className="inline-flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 cursor-pointer font-medium"
+          className="inline-flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 cursor-pointer font-medium select-none"
         >
           Choose file
         </label>
