@@ -6,10 +6,12 @@ import { LoadingIndicatorIcon } from "@/icons/LoadingIndicatorIcon";
 
 export function ProgressStep({
   jobId,
+  file,
   onDone,
   onError,
 }: {
   jobId: string;
+  file: File;
   onDone(url: string): void;
   onError(msg: string): void;
 }) {
@@ -50,9 +52,11 @@ export function ProgressStep({
         {/* File info box */}
         <div className="bg-white border border-gray-200 rounded-lg p-6 mb-6 text-center shadow-sm">
           <h3 className="text-lg font-medium text-gray-900 select-none">
-            Digital Marketing requirements.pptx
+            {file.name}
           </h3>
-          <p className="text-sm text-gray-500 mt-2">5.5 MB</p>
+          <p className="text-sm text-gray-500 mt-2">
+            {(file.size / 1024 / 1024).toFixed(2)} MB
+          </p>
         </div>
 
         {/* Converting status with circular progress */}
@@ -62,23 +66,32 @@ export function ProgressStep({
               {/* Circular progress ring */}
               <div className="bg-white select-none text-base flex items-center justify-center">
                 <svg
-                  className="w-5 h-5 animate-spin"
+                  className="w-8 h-8 animate-spin-pretty"
                   viewBox="0 0 24 24"
                   fill="none"
                 >
-                  <path
-                    fill="gray"
-                    d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"
-                    opacity="1"
+                  <circle
+                    cx="12"
+                    cy="12"
+                    r="10"
+                    stroke="#E5E7EB"
+                    strokeWidth="3"
                   />
-                  <path
-                    fill="blue-700"
-                    d="M12 2C17.52 2 22 6.48 22 12h-2C20 7.58 16.42 4 12 4V2z"
+                  <circle
+                    cx="12"
+                    cy="12"
+                    r="10"
+                    stroke="#3B82F6"
+                    strokeWidth="3"
+                    strokeLinecap="round"
+                    strokeDasharray="31.416"
+                    strokeDashoffset="23.562"
+                    fill="none"
                   />
                 </svg>
               </div>
               <span className="text-base text-gray-700 select-none">
-                Compressing your file...
+                Converting your file
               </span>
             </div>
           </div>

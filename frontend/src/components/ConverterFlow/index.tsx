@@ -26,9 +26,11 @@ export function ConverterFlow() {
       )}
 
       {(state.status === "uploading" || state.status === "processing") &&
-        state.jobId && (
+        state.jobId &&
+        state.file && (
           <ProgressStep
             jobId={state.jobId}
+            file={state.file}
             onDone={actions.complete}
             onError={actions.fail}
           />
