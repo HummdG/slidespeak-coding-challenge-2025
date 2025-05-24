@@ -84,13 +84,6 @@ export function ProgressStep({
           </div>
         </div>
 
-        {/* Loading indicator above buttons */}
-        <div className="flex justify-center mb-6">
-          <div className="animate-spin">
-            <LoadingIndicatorIcon />
-          </div>
-        </div>
-
         {/* Action buttons - Cancel disabled, Convert with simple spinner */}
         <div className="flex gap-4">
           <button
