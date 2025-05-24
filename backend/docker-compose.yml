@@ -1,5 +1,33 @@
-version: '3'
+version: "3.8"
 
 services:
+  web:
+    build: .
+    env_file:
+      - .env
+    volumes:
+      - ./app:/app
+    ports:
+      - "8000:8000"
+    depends_on:
+      - redis
+      - unoserver
+
+  celery:
+    build: .
+    env_file:
+      - .env
+    command: celery -A celery_app.celery worker --loglevel=info
+    depends_on:
+      - redis
+      - unoserver
+
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+
   unoserver:
     image: libreofficedocker/libreoffice-unoserver:3.19-9c28c22
+    ports:
+      - "2002:2002"
