@@ -24,12 +24,14 @@ export function ResultStep({ url, onReset }: { url: string; onReset(): void }) {
         {/* Action buttons */}
         <div className="flex gap-4">
           <button
+            type="button"
             onClick={onReset}
             className="flex-1 px-6 py-3 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 font-medium select-none text-base bg-white"
           >
             Convert another
           </button>
           <button
+            type="button"
             onClick={() => window.open(url, "_blank")}
             className="flex-1 px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 font-medium select-none text-base"
           >

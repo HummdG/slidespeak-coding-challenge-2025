@@ -1,11 +1,12 @@
 // src/components/ProgressStep/index.tsx
+
 "use client";
 
 import React, { useEffect } from "react";
 import { LoadingIndicatorIcon } from "@/icons/LoadingIndicatorIcon";
 
 export function ProgressStep({
-  jobId,
+  jobId = undefined,
   file,
   onDone,
   onError,
@@ -19,14 +20,15 @@ export function ProgressStep({
   const timeout = Number(process.env.NEXT_PUBLIC_POLL_TIMEOUT) || 300000;
 
   useEffect(() => {
-    if (!jobId) return; // Don't start polling until we have a jobId
+    if (!jobId) return undefined; // Return undefined explicitly
 
     const start = Date.now();
     const tick = setInterval(async () => {
       const elapsed = Date.now() - start;
       if (elapsed > timeout) {
         clearInterval(tick);
-        return onError("Conversion timed out");
+        onError("Conversion timed out"); // Don't return the function call
+        return;
       }
       try {
         const res = await fetch(
@@ -45,7 +47,8 @@ export function ProgressStep({
         onError("Network error while polling");
       }
     }, interval);
-    return () => clearInterval(tick);
+
+    return () => clearInterval(tick); // This cleanup return is correct
   }, [jobId, interval, timeout, onDone, onError]);
 
   return (
@@ -102,6 +105,7 @@ export function ProgressStep({
         {/* Action buttons - Cancel disabled, Convert with simple spinner */}
         <div className="flex gap-4">
           <button
+            type="button"
             disabled
             className="flex-1 px-6 py-3 border border-gray-200 text-gray-400 rounded-lg cursor-not-allowed font-medium select-none text-base bg-gray-50"
           >

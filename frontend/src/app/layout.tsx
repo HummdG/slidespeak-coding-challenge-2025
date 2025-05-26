@@ -5,10 +5,11 @@ export const metadata = {
   description: "Convert your PowerPoint File to PDF quickly and efficiently.",
 };
 
-const RootLayout = async ({ children }: { children: React.ReactNode }) => (
-  <html lang="en">
-    <body>{children}</body>
-  </html>
-);
-
+async function RootLayout({ children }: { children: React.ReactNode }) {
+  return (
+    <html lang="en">
+      <body>{children}</body>
+    </html>
+  );
+}
 export default RootLayout;

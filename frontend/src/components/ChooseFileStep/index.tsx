@@ -4,7 +4,7 @@ import UploadIcon from "@/icons/UploadIcon";
 export function ChooseFileStep({ onSelect }: { onSelect(file: File): void }) {
   const handleDrop = (e: React.DragEvent) => {
     e.preventDefault();
-    const files = e.dataTransfer.files;
+    const { files } = e.dataTransfer;
     if (files[0] && files[0].name.endsWith(".pptx")) {
       onSelect(files[0]);
     }
@@ -34,13 +34,14 @@ export function ChooseFileStep({ onSelect }: { onSelect(file: File): void }) {
           accept=".pptx"
           id="pptx-input"
           className="hidden"
-          onChange={(e) => e.target.files?.[0] && onSelect(e.target.files[0])}
+          onChange={e => e.target.files?.[0] && onSelect(e.target.files[0])}
         />
 
         <label
           htmlFor="pptx-input"
           className="inline-flex items-center px-8 py-3 bg-blue-50 text-blue-600 rounded-xl hover:bg-blue-100 cursor-pointer font-medium select-none text-base"
         >
+          <input type="text" />
           Choose file
         </label>
       </div>
