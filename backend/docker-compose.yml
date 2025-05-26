@@ -1,4 +1,3 @@
-
 services:
   web:
     build: .
@@ -20,6 +19,16 @@ services:
     depends_on:
       - redis
       - unoserver
+
+  celery-beat:
+    build: .
+    env_file:
+      - .env
+    command: celery -A celery_app.celery beat --loglevel=info
+    depends_on:
+      - redis
+    volumes:
+      - ./app:/app
 
   redis:
     image: redis:7-alpine

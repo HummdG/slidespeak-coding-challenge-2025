@@ -2,6 +2,7 @@ import os
 import uuid
 import boto3
 import requests
+from datetime import datetime, timedelta
 from celery_app import celery
 
 # Configuration from environment
@@ -68,3 +69,36 @@ def convert_task(self, pptx_key: str, base_filename: str):
     )
 
     return {"url": presigned_url}
+
+
+@celery.task
+def cleanup_old_files():
+    """
+    Delete files from S3 that are older than 1 day
+    """
+    try:
+        # Calculate cutoff time (1 day ago)
+        cutoff_time = datetime.now() - timedelta(days=1)
+        
+        # List all objects in the bucket
+        response = s3.list_objects_v2(Bucket=BUCKET)
+        
+        if 'Contents' not in response:
+            print("No files found in bucket")
+            return
+        
+        deleted_count = 0
+        for obj in response['Contents']:
+            # Check if file is older than 1 day
+            if obj['LastModified'].replace(tzinfo=None) < cutoff_time:
+                # Delete the file
+                s3.delete_object(Bucket=BUCKET, Key=obj['Key'])
+                print(f"Deleted: {obj['Key']}")
+                deleted_count += 1
+        
+        print(f"Cleanup complete. Deleted {deleted_count} files.")
+        return f"Deleted {deleted_count} files"
+        
+    except Exception as e:
+        print(f"Error during cleanup: {str(e)}")
+        raise
