@@ -6,7 +6,7 @@ import { render } from "@testing-library/react";
 describe("ConverterFlow Simple Tests", () => {
   it("should render without crashing", () => {
     // Just test that the component can be imported
-    const ConverterFlow = require("../ConverterFlow").ConverterFlow;
+    const {ConverterFlow} = require("../ConverterFlow");
     expect(ConverterFlow).toBeDefined();
   });
 });

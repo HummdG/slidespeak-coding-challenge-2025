@@ -1,0 +1,10 @@
+# backend/requirements-test.txt
+# Testing dependencies
+pytest>=7.0.0
+pytest-asyncio>=0.21.0
+pytest-cov>=4.0.0
+pytest-mock>=3.10.0
+moto[s3]>=4.0.0
+fakeredis>=2.10.0
+httpx>=0.24.0
+pytest-xdist>=3.0.0
