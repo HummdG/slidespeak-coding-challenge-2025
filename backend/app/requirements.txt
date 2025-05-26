@@ -6,6 +6,7 @@ celery[redis]
 redis
 requests
 black
+# linting
 flake8
 mypy
 isort
