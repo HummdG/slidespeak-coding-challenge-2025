@@ -1,6 +1,7 @@
 """
 Tests for Celery tasks.
 """
+
 import os
 import tempfile
 from datetime import datetime, timedelta
@@ -69,10 +70,12 @@ class TestConvertTask:
     def test_convert_task_unoserver_failure(self, mock_requests_post, mock_s3):
         """Test convert task when unoserver request fails."""
         mock_s3.download_file.return_value = None
-        
+
         # Mock unoserver failure
         mock_response = MagicMock()
-        mock_response.raise_for_status.side_effect = requests.HTTPError("Conversion failed")
+        mock_response.raise_for_status.side_effect = requests.HTTPError(
+            "Conversion failed"
+        )
         mock_requests_post.return_value = mock_response
 
         with pytest.raises(requests.HTTPError, match="Conversion failed"):
@@ -147,13 +150,16 @@ class TestConvertTask:
         # Verify presigned URL generation
         mock_s3.generate_presigned_url.assert_called_once()
         args, kwargs = mock_s3.generate_presigned_url.call_args
-        
+
         assert args[0] == "get_object"
         assert kwargs["ExpiresIn"] == 3600
         assert "Bucket" in kwargs["Params"]
         assert "Key" in kwargs["Params"]
         assert "ResponseContentDisposition" in kwargs["Params"]
-        assert 'filename="My Presentation.pdf"' in kwargs["Params"]["ResponseContentDisposition"]
+        assert (
+            'filename="My Presentation.pdf"'
+            in kwargs["Params"]["ResponseContentDisposition"]
+        )
 
 
 class TestCleanupOldFiles:
@@ -165,7 +171,7 @@ class TestCleanupOldFiles:
         # Mock S3 list response with old and new files
         old_time = datetime.now() - timedelta(days=2)
         new_time = datetime.now() - timedelta(hours=12)
-        
+
         mock_s3.list_objects_v2.return_value = {
             "Contents": [
                 {"Key": "old-file.pdf", "LastModified": old_time},
@@ -202,7 +208,7 @@ class TestCleanupOldFiles:
         """Test cleanup when no files are old enough."""
         # Mock S3 list response with only new files
         new_time = datetime.now() - timedelta(hours=12)
-        
+
         mock_s3.list_objects_v2.return_value = {
             "Contents": [
                 {"Key": "new-file1.pdf", "LastModified": new_time},
@@ -228,7 +234,7 @@ class TestCleanupOldFiles:
     def test_cleanup_delete_error(self, mock_s3):
         """Test cleanup when delete operation fails."""
         old_time = datetime.now() - timedelta(days=2)
-        
+
         mock_s3.list_objects_v2.return_value = {
             "Contents": [
                 {"Key": "old-file.pdf", "LastModified": old_time},
@@ -245,8 +251,8 @@ class TestTaskConfiguration:
 
     def test_environment_variables_loaded(self):
         """Test that environment variables are properly loaded."""
-        from app.tasks import BUCKET, REGION, UNOSERVER, PORT
-        
+        from app.tasks import BUCKET, PORT, REGION, UNOSERVER
+
         assert BUCKET == "test-bucket"
         assert REGION in ["us-east-1", "eu-west-1"]  # Default or test value
         assert UNOSERVER == "test-unoserver"
@@ -257,7 +263,9 @@ class TestTaskConfiguration:
         """Test that custom environment variables are respected."""
         # Need to reimport to get updated env vars
         import importlib
+
         from app import tasks
+
         importlib.reload(tasks)
-        
+
         assert tasks.BUCKET == "custom-bucket"

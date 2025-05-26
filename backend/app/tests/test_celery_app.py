@@ -1,6 +1,7 @@
 """
 Tests for Celery app configuration.
 """
+
 import os
 from unittest.mock import patch
 
@@ -51,7 +52,7 @@ class TestCeleryConfiguration:
         """Test Celery beat schedule configuration."""
         schedule = celery.conf.beat_schedule
         assert "cleanup-old-files" in schedule
-        
+
         cleanup_task = schedule["cleanup-old-files"]
         assert cleanup_task["task"] == "tasks.cleanup_old_files"
         assert cleanup_task["schedule"] == 21600.0  # 6 hours
@@ -69,9 +70,11 @@ class TestCeleryEnvironmentConfiguration:
         """Test Celery with custom Redis URL."""
         # Need to reimport celery_app to pick up new environment
         import importlib
+
         from app import celery_app
+
         importlib.reload(celery_app)
-        
+
         # Check that custom Redis URL is used
         broker_url = celery_app.celery.conf.broker_url
         assert "redis://custom-redis:6379/0" in broker_url
@@ -80,9 +83,11 @@ class TestCeleryEnvironmentConfiguration:
     def test_custom_result_backend(self):
         """Test Celery with custom result backend."""
         import importlib
+
         from app import celery_app
+
         importlib.reload(celery_app)
-        
+
         backend_url = celery_app.celery.conf.result_backend
         assert "redis://result-redis:6379/1" in backend_url
 
@@ -90,9 +95,11 @@ class TestCeleryEnvironmentConfiguration:
     def test_custom_time_limits(self):
         """Test Celery with custom time limits."""
         import importlib
+
         from app import celery_app
+
         importlib.reload(celery_app)
-        
+
         assert celery_app.celery.conf.task_soft_time_limit == 600
         assert celery_app.celery.conf.task_time_limit == 720
 
@@ -115,7 +122,7 @@ class TestTaskRegistration:
         # Get task info
         convert_task_obj = celery.tasks.get("tasks.convert_task")
         assert convert_task_obj is not None
-        
+
         cleanup_task_obj = celery.tasks.get("tasks.cleanup_old_files")
         assert cleanup_task_obj is not None
 
@@ -139,8 +146,12 @@ class TestCeleryHealthCheck:
     def test_celery_task_routing(self):
         """Test basic task routing configuration."""
         # Verify default routing works
-        assert celery.conf.task_default_queue is None or isinstance(celery.conf.task_default_queue, str)
-        assert celery.conf.task_default_exchange is None or isinstance(celery.conf.task_default_exchange, str)
+        assert celery.conf.task_default_queue is None or isinstance(
+            celery.conf.task_default_queue, str
+        )
+        assert celery.conf.task_default_exchange is None or isinstance(
+            celery.conf.task_default_exchange, str
+        )
 
 
 class TestCeleryWorkerConfiguration:
@@ -163,7 +174,7 @@ class TestCeleryWorkerConfiguration:
         # Verify we're using JSON serialization for security
         assert celery.conf.task_serializer == "json"
         assert celery.conf.result_serializer == "json"
-        
+
         # Verify we're not using pickle (security risk)
         assert "pickle" not in celery.conf.accept_content
         assert "application/x-python-serialize" not in celery.conf.accept_content
