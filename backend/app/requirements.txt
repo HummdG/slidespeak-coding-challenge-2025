@@ -5,3 +5,12 @@ python-multipart
 celery[redis]
 redis
 requests
+black
+flake8
+mypy
+isort
+bandit
+types-requests
+boto3-stubs
+types-redis
+celery-types
