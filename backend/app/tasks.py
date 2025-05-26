@@ -1,8 +1,10 @@
 import os
 import uuid
+from datetime import datetime, timedelta
+
 import boto3
 import requests
-from datetime import datetime, timedelta
+
 from celery_app import celery
 
 # Configuration from environment
@@ -27,7 +29,7 @@ def convert_task(self, pptx_key: str, base_filename: str):
     uid = uuid.uuid4().hex
     local_pptx = f"/tmp/{uid}.pptx"
     local_pdf = f"/tmp/{uid}.pdf"
-    
+
     # Use original filename for the PDF (with unique prefix to avoid conflicts)
     pdf_key = f"{uid}_{base_filename}.pdf"
 
@@ -61,9 +63,9 @@ def convert_task(self, pptx_key: str, base_filename: str):
     presigned_url = s3.generate_presigned_url(
         "get_object",
         Params={
-            "Bucket": BUCKET, 
+            "Bucket": BUCKET,
             "Key": pdf_key,
-            "ResponseContentDisposition": f'attachment; filename="{base_filename}.pdf"'
+            "ResponseContentDisposition": f'attachment; filename="{base_filename}.pdf"',
         },
         ExpiresIn=3600,
     )
@@ -79,26 +81,26 @@ def cleanup_old_files():
     try:
         # Calculate cutoff time (1 day ago)
         cutoff_time = datetime.now() - timedelta(days=1)
-        
+
         # List all objects in the bucket
         response = s3.list_objects_v2(Bucket=BUCKET)
-        
-        if 'Contents' not in response:
+
+        if "Contents" not in response:
             print("No files found in bucket")
             return
-        
+
         deleted_count = 0
-        for obj in response['Contents']:
+        for obj in response["Contents"]:
             # Check if file is older than 1 day
-            if obj['LastModified'].replace(tzinfo=None) < cutoff_time:
+            if obj["LastModified"].replace(tzinfo=None) < cutoff_time:
                 # Delete the file
-                s3.delete_object(Bucket=BUCKET, Key=obj['Key'])
+                s3.delete_object(Bucket=BUCKET, Key=obj["Key"])
                 print(f"Deleted: {obj['Key']}")
                 deleted_count += 1
-        
+
         print(f"Cleanup complete. Deleted {deleted_count} files.")
         return f"Deleted {deleted_count} files"
-        
+
     except Exception as e:
         print(f"Error during cleanup: {str(e)}")
         raise
