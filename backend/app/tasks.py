@@ -1,9 +1,7 @@
 import os
 import uuid
-
 import boto3
 import requests
-
 from celery_app import celery
 
 # Configuration from environment
@@ -17,18 +15,20 @@ s3 = boto3.client("s3", region_name=REGION)
 
 
 @celery.task(bind=True)
-def convert_task(self, pptx_key: str):
+def convert_task(self, pptx_key: str, base_filename: str):
     """
     1) Download PPTX from S3
     2) Send it to Unoserver via its /request endpoint
     3) Save returned PDF to /tmp
-    4) Upload PDF back to S3 & return a presigned URL
+    4) Upload PDF back to S3 with original filename
     """
-    # Generate unique filenames / keys
+    # Generate unique filenames / keys using original filename
     uid = uuid.uuid4().hex
     local_pptx = f"/tmp/{uid}.pptx"
     local_pdf = f"/tmp/{uid}.pdf"
-    pdf_key = f"{uid}.pdf"
+    
+    # Use original filename for the PDF (with unique prefix to avoid conflicts)
+    pdf_key = f"{uid}_{base_filename}.pdf"
 
     # 1) Download PPTX from S3
     s3.download_file(BUCKET, pptx_key, local_pptx)
@@ -47,7 +47,7 @@ def convert_task(self, pptx_key: str):
     with open(local_pdf, "wb") as pdf_out:
         pdf_out.write(response.content)
 
-    # 4) Upload the PDF back to S3
+    # 4) Upload the PDF back to S3 with meaningful filename
     s3.upload_file(local_pdf, BUCKET, pdf_key)
 
     # Cleanup local temp files
@@ -56,9 +56,15 @@ def convert_task(self, pptx_key: str):
     # Optionally remove original PPTX from S3:
     # s3.delete_object(Bucket=BUCKET, Key=pptx_key)
 
-    # Generate a presigned URL valid for 1 hour
+    # Generate a presigned URL with the original filename for download
     presigned_url = s3.generate_presigned_url(
-        "get_object", Params={"Bucket": BUCKET, "Key": pdf_key}, ExpiresIn=3600
+        "get_object",
+        Params={
+            "Bucket": BUCKET, 
+            "Key": pdf_key,
+            "ResponseContentDisposition": f'attachment; filename="{base_filename}.pdf"'
+        },
+        ExpiresIn=3600,
     )
 
     return {"url": presigned_url}
