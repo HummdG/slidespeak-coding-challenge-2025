@@ -37,7 +37,6 @@ export function ConfirmStep({
                 htmlFor="convert-pdf"
                 className="font-semibold text-blue-900 cursor-pointer select-none text-base"
               >
-                <input type="text" />
                 Convert to PDF
               </label>
               <p className="text-sm text-blue-700 mt-2 select-none">

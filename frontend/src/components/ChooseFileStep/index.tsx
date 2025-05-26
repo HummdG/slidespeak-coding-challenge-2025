@@ -41,7 +41,6 @@ export function ChooseFileStep({ onSelect }: { onSelect(file: File): void }) {
           htmlFor="pptx-input"
           className="inline-flex items-center px-8 py-3 bg-blue-50 text-blue-600 rounded-xl hover:bg-blue-100 cursor-pointer font-medium select-none text-base"
         >
-          <input type="text" />
           Choose file
         </label>
       </div>
